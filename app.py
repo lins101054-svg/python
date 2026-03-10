@@ -29,7 +29,7 @@ def index():
 
 @app.route('/ask', methods=['GET', 'POST'])
 def ask():
-        .request.method == 'POST':
+       if request.method == 'POST':
         # 2. 讀取學生的問題###^#@#Q%#@
         question = request.form.get('question', '').strip()
         # 3. 查詢題庫的對應答案
@@ -56,7 +56,7 @@ def ask():
 
 @app.route('/gpt', methods=['GET', 'POST'])
 def gpt():
-       .request.method == 'POST':
+    if request.method == 'POST':
         # 2. 讀取學生的問題
         question = request.form.get('question', '').strip()
         # 3. 查詢題庫的對應答案
@@ -68,7 +68,7 @@ def gpt():
 
 
 
- .__name__ == '__main__':
+ if __name__ == '__main__':
     # 開發用；部署用 gunicorn（見下方）
     app.run(host='0.0.0.0', debug=False)
 
