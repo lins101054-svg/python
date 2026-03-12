@@ -68,7 +68,7 @@ def gpt():
 
 
 
- if __name__ == '__main__':
+    if __name__ == '__main__':
     # 開發用；部署用 gunicorn（見下方）
     app.run(host='0.0.0.0', debug=False)
 
