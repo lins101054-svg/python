@@ -41,16 +41,16 @@ def index():
 def ask():
     question = ""
     answer = ""
-    selected_lang = "ko" # 預設選取韓文
+    selected_lang = "ko" 
 
     if request.method == 'POST':
         question = request.form.get('question', '').strip()
         selected_lang = request.form.get('lang', 'ko')
         
-        # 根據選單決定使用哪個辭典
+        # 修正：確保引用的是定義過的 zh_ko_dict 或 zh_jp_dict
         current_dict = zh_ko_dict if selected_lang == "ko" else zh_jp_dict
         
-        # 執行查詢邏輯
+        # 只有在 current_dict 成功取得後，.get 才會回傳您的預設錯誤訊息
         answer = current_dict.get(question, "很抱歉，目前本地辭庫沒有此詞彙")
 
     return render_template('ask.html', question=question, answer=answer, lang=selected_lang)
