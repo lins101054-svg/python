@@ -30,8 +30,6 @@ zh_jp_dict = {
 }
 
 
-
-
 # homepage process
 @app.route('/')
 def index():
@@ -40,19 +38,17 @@ def index():
 @app.route('/ask', methods=['GET', 'POST'])
 def ask():
     question = ""
-    answer = ""
-    selected_lang = "ko" 
+    answer = None  # 預設為 None，代表尚未進行查詢
+    selected_lang = "ko"
 
     if request.method == 'POST':
         question = request.form.get('question', '').strip()
         selected_lang = request.form.get('lang', 'ko')
         
-        # 修正處：確保名稱與上方定義的 zh_ko_dict / zh_jp_dict 一致
         current_dict = zh_ko_dict if selected_lang == "ko" else zh_jp_dict
-        
-        # 執行查詢邏輯
         answer = current_dict.get(question, "很抱歉，目前本地辭庫沒有此詞彙")
 
+    # 在 render 時，如果 answer 是 None，前端就不顯示結果
     return render_template('ask.html', question=question, answer=answer, lang=selected_lang)
 
 if __name__ == '__main__':
