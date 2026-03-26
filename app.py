@@ -48,7 +48,7 @@ def ask():
         selected_lang = request.form.get('lang', 'ko')
         
         # 根據選單決定使用哪個辭典
-        current_dict = ko_dict if selected_lang == "ko" else jp_dict
+        current_dict = zh_ko_dict if selected_lang == "ko" else zh_jp_dict
         
         # 執行查詢邏輯
         answer = current_dict.get(question, "很抱歉，目前本地辭庫沒有此詞彙")
