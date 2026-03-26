@@ -47,10 +47,10 @@ def ask():
         question = request.form.get('question', '').strip()
         selected_lang = request.form.get('lang', 'ko')
         
-        # 修正：確保引用的是定義過的 zh_ko_dict 或 zh_jp_dict
+        # 修正處：確保名稱與上方定義的 zh_ko_dict / zh_jp_dict 一致
         current_dict = zh_ko_dict if selected_lang == "ko" else zh_jp_dict
         
-        # 只有在 current_dict 成功取得後，.get 才會回傳您的預設錯誤訊息
+        # 執行查詢邏輯
         answer = current_dict.get(question, "很抱歉，目前本地辭庫沒有此詞彙")
 
     return render_template('ask.html', question=question, answer=answer, lang=selected_lang)
