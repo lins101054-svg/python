@@ -37,23 +37,25 @@ zh_ko_dict = {
 def index():
     return render_template('index.html')
 
-
 @app.route('/ask', methods=['GET', 'POST'])
 def ask():
+    question = ""
+    answer = ""
+    selected_lang = "ko" # 預設選取韓文
+
     if request.method == 'POST':
-        # 2. 讀取學生的問題
         question = request.form.get('question', '').strip()
-        # 3. 查詢題庫的對應答案
-        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個詞的韓文對應。")
-        # 4. 回傳答案給學生
-        return render_template('ask.html', question=question, answer=answer)
-    # GET 時給空白欄位
-    return render_template('ask.html', question="", answer="")
+        selected_lang = request.form.get('lang', 'ko')
+        
+        # 根據選單決定使用哪個辭典
+        current_dict = ko_dict if selected_lang == "ko" else jp_dict
+        
+        # 執行查詢邏輯
+        answer = current_dict.get(question, "很抱歉，目前本地辭庫沒有此詞彙")
 
-
+    return render_template('ask.html', question=question, answer=answer, lang=selected_lang)
 
 if __name__ == '__main__':
-    # 開發用；部署用 gunicorn（見下方）
-    app.run(host='0.0.0.0', debug=False)
+    app.run(host='0.0.0.0', debug=True)
 
 
