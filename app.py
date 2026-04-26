@@ -40,17 +40,7 @@ def ask():
 
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
-    if request.method == 'POST':
-        # 2. 讀取使用者輸入的股票號碼
-        question = request.form.get('question', '').strip()
-        # 3. 查詢股票號碼的收盤價
-        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個股票號碼。")
-        # 4. 回傳答案給使用者
-        return render_template('stock.html', question=question, answer=answer)
-    # GET 時給空白欄位
-    return render_template('stock.html', question="", answer="")
-
-import requests #放在最前面? 函數stock內?
+    import requests #放在最前面? 函數stock內?
  
 # 使用者輸入
 stock_no = input("請輸入股票代號（例如 2330）：")
@@ -68,6 +58,15 @@ if data["stat"] == "OK":
     print("前一天收盤價：",data["data"][-1][6]) #return render_template('stock.html', question=question, answer=answer)
 else:
     print("查無資料，請確認股票代號或日期") #return render_template('stock.html', question=question, answer=answer)
+    if request.method == 'POST':
+        # 2. 讀取使用者輸入的股票號碼
+        question = request.form.get('question', '').strip()
+        # 3. 查詢股票號碼的收盤價
+        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個股票號碼。")
+        # 4. 回傳答案給使用者
+        return render_template('stock.html', question=question, answer=answer)
+    # GET 時給空白欄位
+    return render_template('stock.html', question="", answer="")
 
 if __name__ == '__main__':
     # 開發用；部署用 gunicorn（見下方）
