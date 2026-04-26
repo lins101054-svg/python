@@ -38,6 +38,8 @@ def ask():
     # GET 時給空白欄位
     return render_template('ask.html', question="", answer="")
 
+import requests #放在最前面? 函數stock內?
+ 
 # 使用者輸入
 stock_no = input("請輸入股票代號（例如 2330）：")
  
@@ -54,7 +56,6 @@ if data["stat"] == "OK":
     print("前一天收盤價：",data["data"][-1][6]) #return render_template('stock.html', question=question, answer=answer)
 else:
     print("查無資料，請確認股票代號或日期") #return render_template('stock.html', question=question, answer=answer)
-
 
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
