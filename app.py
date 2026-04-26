@@ -20,6 +20,42 @@ zh_ko_dict = {
 }
 
 
+# homepage process
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/ask', methods=['GET', 'POST'])
+def ask():
+    if request.method == 'POST':
+        # 2. 讀取學生的問題
+        question = request.form.get('question', '').strip()
+        # 3. 查詢題庫的對應答案
+        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個詞的韓文對應。")
+        # 4. 回傳答案給學生
+        return render_template('ask.html', question=question, answer=answer)
+    # GET 時給空白欄位
+    return render_template('ask.html', question="", answer="")
+
+
+@app.route('/stock', methods=['GET', 'POST'])
+def stock():
+    if request.method == 'POST':
+        # 2. 讀取使用者輸入的股票號碼
+        question = request.form.get('question', '').strip()
+        # 3. 查詢股票號碼的收盤價
+        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個股票號碼。")
+        # 4. 回傳答案給使用者
+        return render_template('stock.html', question=question, answer=answer)
+    # GET 時給空白欄位
+    return render_template('stock.html', question="", answer="")
+
+if __name__ == '__main__':
+    # 開發用；部署用 gunicorn（見下方）
+    app.run(host='0.0.0.0', debug=False)
+
+
 
 
 # 使用者輸入
