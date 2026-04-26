@@ -19,12 +19,6 @@ zh_ko_dict = {
     "愛": "사랑"
 }
 
-
-# homepage process
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 import requests #放在最前面? 函數stock內?
  
 # 使用者輸入
@@ -43,6 +37,11 @@ if data["stat"] == "OK":
     print("前一天收盤價：",data["data"][-1][6]) #return render_template('stock.html', question=question, answer=answer)
 else:
     print("查無資料，請確認股票代號或日期") #return render_template('stock.html', question=question, answer=answer)
+    
+# homepage process
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/ask', methods=['GET', 'POST'])
