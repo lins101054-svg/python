@@ -25,19 +25,6 @@ zh_ko_dict = {
 def index():
     return render_template('index.html')
 
-
-@app.route('/ask', methods=['GET', 'POST'])
-def ask():
-    if request.method == 'POST':
-        # 2. 讀取學生的問題
-        question = request.form.get('question', '').strip()
-        # 3. 查詢題庫的對應答案
-        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個詞的韓文對應。")
-        # 4. 回傳答案給學生
-        return render_template('ask.html', question=question, answer=answer)
-    # GET 時給空白欄位
-    return render_template('ask.html', question="", answer="")
-
 import requests #放在最前面? 函數stock內?
  
 # 使用者輸入
@@ -56,6 +43,19 @@ if data["stat"] == "OK":
     print("前一天收盤價：",data["data"][-1][6]) #return render_template('stock.html', question=question, answer=answer)
 else:
     print("查無資料，請確認股票代號或日期") #return render_template('stock.html', question=question, answer=answer)
+
+
+@app.route('/ask', methods=['GET', 'POST'])
+def ask():
+    if request.method == 'POST':
+        # 2. 讀取學生的問題
+        question = request.form.get('question', '').strip()
+        # 3. 查詢題庫的對應答案
+        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個詞的韓文對應。")
+        # 4. 回傳答案給學生
+        return render_template('ask.html', question=question, answer=answer)
+    # GET 時給空白欄位
+    return render_template('ask.html', question="", answer="")
 
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
