@@ -1,6 +1,6 @@
 
 from flask import Flask, request, render_template
-
+import requests
 app = Flask(__name__)
 
 # 建立題庫
@@ -44,13 +44,25 @@ def ask():
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
     if request.method == 'POST':
-        # 2. 讀取使用者輸入的股票號碼
-        question = request.form.get('question', '').strip()
-        # 3. 查詢股票號碼的收盤價
-        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個股票號碼。")
-        # 4. 回傳答案給使用者
-        return render_template('stock.html', question=question, answer=answer)
-    # GET 時給空白欄位
+        stock_no = request.form.get('question', '').strip()
+
+        # API URL
+        url = f"https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&stockNo={stock_no}"
+
+        try:
+            res = requests.get(url)
+            data = res.json()
+
+            if data["stat"] == "OK":
+                answer = data["data"][-1][6]  # 最新收盤價
+            else:
+                answer = "查無資料，請確認股票代號"
+
+        except:
+            answer = "系統錯誤，請稍後再試"
+
+        return render_template('stock.html', question=stock_no, answer=answer)
+
     return render_template('stock.html', question="", answer="")
 
 if __name__ == '__main__':
