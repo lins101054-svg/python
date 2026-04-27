@@ -46,20 +46,22 @@ def stock():
     if request.method == 'POST':
         stock_no = request.form.get('question', '').strip()
 
-        # API URL
+        if stock_no == "":
+            return render_template('stock.html', question="", answer="請輸入股票代號")
+
         url = f"https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&stockNo={stock_no}"
 
         try:
-            res = requests.get(url)
+            res = requests.get(url, timeout=10)
             data = res.json()
 
-            if data["stat"] == "OK":
-                answer = data["data"][-1][6]  # 最新收盤價
+            if data.get("stat") == "OK" and len(data.get("data", [])) > 0:
+                answer = data["data"][-1][6]
             else:
                 answer = "查無資料，請確認股票代號"
 
-        except:
-            answer = "系統錯誤，請稍後再試"
+        except Exception as e:
+            answer = "系統錯誤：" + str(e)
 
         return render_template('stock.html', question=stock_no, answer=answer)
 
