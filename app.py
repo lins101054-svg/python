@@ -1,6 +1,8 @@
 
 from flask import Flask, request, render_template
-import requests
+import urllib.request
+import json
+import os
 app = Flask(__name__)
 
 # 建立題庫
@@ -52,8 +54,8 @@ def stock():
         url = f"https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&stockNo={stock_no}"
 
         try:
-            res = requests.get(url, timeout=10)
-            data = res.json()
+            with urllib.request.urlopen(url, timeout=10) as response:
+                data = json.loads(response.read().decode("utf-8"))
 
             if data.get("stat") == "OK" and len(data.get("data", [])) > 0:
                 answer = data["data"][-1][6]
@@ -68,4 +70,5 @@ def stock():
     return render_template('stock.html', question="", answer="")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
