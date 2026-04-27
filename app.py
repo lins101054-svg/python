@@ -19,7 +19,9 @@ zh_ko_dict = {
     "愛": "사랑"
 }
 
-    
+
+
+
 # homepage process
 @app.route('/')
 def index():
@@ -38,38 +40,19 @@ def ask():
     # GET 時給空白欄位
     return render_template('ask.html', question="", answer="")
 
+
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
-   import requests
-   @app.route('/stock', methods=['GET', 'POST'])
-def stock():
     if request.method == 'POST':
-        stock_no = request.form.get('question', '').strip()
-
-        url = f"https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&stockNo={stock_no}"
-
-        try:
-            res = requests.get(url)
-            data = res.json()
-
-            if data["stat"] == "OK" and data["data"]:
-                last_day = data["data"][-1]
-                date = last_day[0]
-                close_price = last_day[6]
-
-                answer = f"日期：{date}，收盤價：{close_price}"
-            else:
-                answer = "查無資料，請確認股票代號"
-
-        except Exception as e:
-            answer = f"發生錯誤：{e}"
-
-        return render_template('stock.html', question=stock_no, answer=answer)
-
+        # 2. 讀取使用者輸入的股票號碼
+        question = request.form.get('question', '').strip()
+        # 3. 查詢股票號碼的收盤價
+        answer = zh_ko_dict.get(question, "抱歉，我目前沒有這個股票號碼。")
+        # 4. 回傳答案給使用者
+        return render_template('stock.html', question=question, answer=answer)
+    # GET 時給空白欄位
     return render_template('stock.html', question="", answer="")
-
 
 if __name__ == '__main__':
     # 開發用；部署用 gunicorn（見下方）
     app.run(host='0.0.0.0', debug=False)
-
